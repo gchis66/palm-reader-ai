@@ -1,0 +1,25 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+}
+
+#preview img {
+  max-width: 100%;
+  height: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+#loading {
+  margin-top: 20px;
+  font-size: 20px;
+  color: #007bff;
+}
