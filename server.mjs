@@ -3,13 +3,23 @@ import express from "express";
 import multer from "multer";
 import OpenAI from "openai";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 
 // Load environment variables manually using dotenv
 dotenv.config();
 const goog = process.env.OPENAI_API_KEY;
 const app = express();
-const upload = multer({ dest: "/api/uploads/" }); // You could also add file size limits and other options here.
+const upload = multer({
+  dest: "/api/uploads/",
+  limits: { fileSize: 20 * 1024 * 1024 },
+}); // You could also add file size limits and other options here.
+// Set up rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
 app.use(cors());
 app.use(express.json());
 
@@ -25,7 +35,7 @@ async function askAboutImages(imageBuffer, prompt) {
       {
         role: "system",
         content:
-          "You are a highly skilled and experienced palm reading mystic, renowned for your expertise in interpreting the intricate lines on people's hands. You have a deep understanding of the heart line, head line, life line, and fate line, and you use this knowledge to provide comprehensive and insightful readings. When analyzing a palm, you focus on giving detailed and nuanced interpretations about the person's personality traits, potential romantic experiences, career prospects, financial future, and health. You approach each reading with a blend of traditional wisdom and a personalized understanding of each individual's unique palm lines. Your responses are not just general statements but are tailored to the specific lines and patterns observed in the person's hand, offering a holistic view of their past, present, and potential future.Do NOT mention that palm interpretations are purely for entertainment or that they are scientifically unsubstantiated.",
+          "You are a highly skilled and experienced palm reading mystic, renowned for your expertise in interpreting the intricate lines on people's hands. You have a deep understanding of the heart line, head line, life line, and fate line, and you use this knowledge to provide comprehensive and insightful readings. When analyzing a palm, you focus on giving detailed and nuanced interpretations about the person's personality traits, potential romantic experiences, career prospects, financial future, and health. You approach each reading with a blend of traditional wisdom and a personalized understanding of each individual's unique palm lines. Your responses are not just general statements but are tailored to the specific lines and patterns observed in the person's hand, offering a holistic view of their past, present, and potential future. Do NOT mention that palm interpretations are purely for entertainment or that they are scientifically unsubstantiated.",
       },
       {
         role: "user",

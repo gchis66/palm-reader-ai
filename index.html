@@ -12,8 +12,15 @@
       <input type="file" id="imageInput" accept="image/*" />
       <button id="uploadButton">Upload and Read Palm</button>
       <div id="preview"></div>
-      <div id="loading" class="hidden">Loading...</div>
-      <div id="result"></div>
+    </div>
+
+    <!-- Modal structure -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modal-text">Please wait while your palm is being read...</div>
+        <div id="modal-loading" class="loader"></div>
+      </div>
     </div>
 
     <script src="script.js"></script>
