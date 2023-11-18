@@ -19,9 +19,12 @@ document.getElementById("uploadButton").addEventListener("click", function () {
   const modal = document.getElementById("modal");
   const modalText = document.getElementById("modal-text");
   const modalLoading = document.getElementById("modal-loading");
+  const closeSpan = document.getElementsByClassName("close")[0];
+
   modal.style.display = "block";
   modalLoading.style.display = "block"; // Show loader
   modalText.textContent = "Please wait while your palm is being read..."; // Set loading text
+  closeSpan.style.pointerEvents = "none"; // Disable close button until the content is loaded
 
   // Send request to backend
   fetch("http://localhost:3000/api/upload", {
@@ -45,10 +48,12 @@ document.getElementById("uploadButton").addEventListener("click", function () {
     .then((data) => {
       modalText.innerHTML = data.message; // Display the response
       modalLoading.style.display = "none"; // Hide loader
+      closeSpan.style.pointerEvents = "auto"; // Enable close button
     })
     .catch((error) => {
       modalText.textContent = error.message; // Display error message
       modalLoading.style.display = "none"; // Hide loader
+      closeSpan.style.pointerEvents = "auto"; // Enable close button
     });
 });
 
@@ -60,9 +65,4 @@ span.onclick = function () {
   document.getElementById("modal").style.display = "none";
 };
 
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-};
+// Intentionally removed the window.onclick event handler to prevent the modal from closing when clicking outside

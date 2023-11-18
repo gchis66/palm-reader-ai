@@ -63,7 +63,7 @@ app.post("/api/upload", upload.single("palmImage"), async (req, res) => {
   try {
     const imageBuffer = fs.readFileSync(req.file.path);
     const prompt =
-      "Please read my palm and generate a detailed response of at least 500 words";
+      "Please read my palm and generate a detailed response of at least 600 words. Return your response in a stylized HTML format that would look good in the body of a website. Use paragraphs, bolded headers and other html tags needed to make your response render in a readable way to display on a web page.";
     const palmReading = await askAboutImages(imageBuffer, prompt);
 
     res.json({ message: palmReading });

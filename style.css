@@ -35,8 +35,9 @@ body {
   padding: 20px;
   border: 1px solid #888;
   width: 50%;
-  overflow: scroll;
+  overflow-y: scroll;
   height: 50%;
+  position: relative;
 }
 #modal-text {
   font-size: 20px;
@@ -47,6 +48,9 @@ body {
   float: right;
   font-size: 28px;
   font-weight: bold;
+  position: fixed;
+  top: 20px;
+  right: 20px;
 }
 
 .close:hover,
@@ -73,5 +77,19 @@ body {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* Media Queries */
+
+@media only screen and (max-width: 960px) and (orientation: landscape) {
+  .modal-content {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .modal-content {
+    width: 100%;
   }
 }
