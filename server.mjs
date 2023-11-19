@@ -62,8 +62,27 @@ app.post("/api/upload", upload.single("palmImage"), async (req, res) => {
 
   try {
     const imageBuffer = fs.readFileSync(req.file.path);
-    const prompt =
-      "Please read my palm and generate a detailed response of at least 600 words. Return your response in a stylized HTML format that would look good in the body of a website. Use paragraphs, bolded headers and other html tags needed to make your response render in a readable way to display on a web page.";
+    const prompt = `Please read my palm and generate a detailed response of at least 600 words in the following format: 
+      
+      <h2>Palm Reading Analysis</h2>
+
+<p>put your introduction here where you briefly describe what you notice about the palm</p>
+
+<h3>Health and Physical Vitality</h3>
+<p>put your palm reading findings in regards to health and physical vitality here</p>
+
+<h3>Love and Emotion</h3>
+<p>put your palm reading findings in regards to love and emotion here</p>
+
+<h3>Intelligence and Mentality</h3>
+<p>put your palm reading findings in regards to intelligence and mentality here</p>
+
+<h3>Career and Luck</h3>
+<p>put your palm reading findings in regards to career and luck here</p>
+
+<h3>Final Thoughts</h3>
+<p>put a recap of the important details here and end with a comprehensive conclusion about their palm and their future and destiny</p> 
+      `;
     const palmReading = await askAboutImages(imageBuffer, prompt);
 
     res.json({ message: palmReading });
