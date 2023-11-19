@@ -3,15 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Palm Reading App</title>
+    <title>Palm Reader</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
-      <h1>Palm Reading App</h1>
+      <h1>Discover Your Destiny</h1>
+      <h3>Unveil your life's secrets with a single palm reading</h3>
       <input type="file" id="imageInput" accept="image/*" />
-      <button id="uploadButton" style="display: none">Read My Palm</button>
+      <button id="openCameraButton">Open Camera</button>
+      <video id="cameraStream" autoplay hidden></video>
+      <canvas id="canvas" width="640" height="480" hidden></canvas>
+      <button id="snapButton" hidden>Snap Photo</button>
       <div id="preview"></div>
+      <button id="uploadButton" style="display: none">
+        Upload and Read Palm
+      </button>
     </div>
 
     <!-- Modal structure -->
