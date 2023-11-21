@@ -24,7 +24,7 @@ document.getElementById("uploadButton").addEventListener("click", function () {
   modalLoading.style.display = "block";
   modalText.textContent = "Please wait while your palm is being read...";
 
-  fetch("http://localhost:3000/api/upload", {
+  fetch("https://palm-reader-app.onrender.com/api/upload", {
     method: "POST",
     body: formData,
   })
