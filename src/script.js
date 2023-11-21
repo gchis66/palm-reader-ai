@@ -94,7 +94,7 @@ document
 
     if (navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ video: { facingMode: { ideal: "environment" } } })
         .then(function (stream) {
           cameraStream.srcObject = stream;
         })
