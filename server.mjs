@@ -1,4 +1,3 @@
-import fs from "fs";
 import express from "express";
 import multer from "multer";
 import OpenAI from "openai";
@@ -6,15 +5,17 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
 
-// Load environment variables manually using dotenv
 dotenv.config();
 const goog = process.env.OPENAI_API_KEY;
 const app = express();
+
+// Configure multer to use memory storage
+const storage = multer.memoryStorage();
 const upload = multer({
-  dest: "/api/uploads/",
+  storage: storage,
   limits: { fileSize: 20 * 1024 * 1024 },
-}); // You could also add file size limits and other options here.
-// Set up rate limiting
+});
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // limit each IP to 100 requests per windowMs
@@ -61,10 +62,10 @@ app.post("/api/upload", upload.single("palmImage"), async (req, res) => {
   }
 
   try {
-    const imageBuffer = fs.readFileSync(req.file.path);
+    const imageBuffer = req.file.buffer; // Use the buffer directly from multer
     const prompt = `Please read my palm and generate a detailed response of at least 600 words in the following format: 
       
-      <h2>Palm Reading Analysis</h2>
+    <h2>Palm Reading Analysis</h2>
 
 <p>put your introduction here where you briefly describe what you notice about the palm</p>
 
@@ -82,16 +83,13 @@ app.post("/api/upload", upload.single("palmImage"), async (req, res) => {
 
 <h3>Final Thoughts</h3>
 <p>put a recap of the important details here and end with a comprehensive conclusion about their palm and their future and destiny</p> 
-      `;
-    const palmReading = await askAboutImages(imageBuffer, prompt);
+    `;
 
+    const palmReading = await askAboutImages(imageBuffer, prompt);
     res.json({ message: palmReading });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error processing image.");
-  } finally {
-    // Delete the uploaded file after processing
-    fs.unlinkSync(req.file.path);
   }
 });
 
