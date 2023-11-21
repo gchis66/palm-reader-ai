@@ -1,22 +1,56 @@
 body {
-  font-family: Arial, sans-serif;
+  font-family: "Spectral", serif;
   text-align: center;
   padding: 20px;
+  background-color: #f4e8ff; /* Light purple background */
+  color: #4a3f35; /* Dark text for readability */
 }
 
 .container {
   width: 80%;
   margin: auto;
+  background: #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  color: #9954bb; /* Deeper purple for headers */
+  font-size: 2.5em;
+}
+
+h3 {
+  color: #9954bb;
+  margin-bottom: 20px;
 }
 
 #preview img {
   max-height: 250px;
   width: auto;
-  margin: auto;
-  padding: 10px;
+  margin: 10px auto;
 }
 
-/* Modal styles */
+input[type="file"],
+button {
+  font-family: "Spectral", serif;
+  background-color: #9954bb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  margin: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+input[type="file"]:hover,
+button:hover {
+  background-color: #7a4298;
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -26,32 +60,28 @@ body {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(43, 43, 82, 0.9); /* Darker overlay for modal */
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: #fff5ee; /* Lighter background for content */
+  color: #4a3f35; /* Dark text for readability */
   margin: 10% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 50%;
-  overflow-y: scroll;
-  height: 50%;
+  overflow-y: auto;
+  height: auto;
   position: relative;
 }
 
-#modal-text {
-  font-size: 20px;
-}
-
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+  color: #aa3377;
   position: fixed;
   top: 20px;
   right: 20px;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 .close:hover,
@@ -61,25 +91,36 @@ body {
   cursor: pointer;
 }
 
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #9954bb;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  margin: auto;
+  animation: spin 2s linear infinite;
+}
+
 #cameraStream {
   display: none;
   margin: auto;
-  width: 400px;
+  width: 300px;
   height: auto;
   padding: 20px;
 }
+
 #snapButton {
   display: none;
+  background-color: #9954bb;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
-/* Loader styles */
-.loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  margin: auto;
-  animation: spin 2s linear infinite;
+
+#snapButton:hover {
+  background-color: #7a4298;
 }
 
 @keyframes spin {
@@ -91,16 +132,10 @@ body {
   }
 }
 
-/* Media Queries */
-
-@media only screen and (max-width: 960px) and (orientation: landscape) {
-  .modal-content {
-    width: 100%;
-  }
-}
-
-@media only screen and (max-width: 600px) {
-  .modal-content {
-    width: 100%;
+@media only screen and (max-width: 960px) and (orientation: landscape),
+  only screen and (max-width: 600px) {
+  .modal-content,
+  .container {
+    width: 95%;
   }
 }

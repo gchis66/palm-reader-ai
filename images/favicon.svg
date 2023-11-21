@@ -1,0 +1,13 @@
+<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="300" height="300" fill="#D6BCFA"/>
+
+  <!-- Outer Eye Shape -->
+  <path d="M50,150 Q150,50 250,150 Q150,250 50,150" fill="none" stroke="darkblue" stroke-width="10"/>
+
+  <!-- Inner Eye (Iris) -->
+  <circle cx="150" cy="150" r="60" fill="lightblue"/>
+
+  <!-- Pupil -->
+  <circle cx="150" cy="150" r="30" fill="darkblue"/>
+</svg>

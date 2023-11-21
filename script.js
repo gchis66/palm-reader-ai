@@ -1,19 +1,19 @@
 document.getElementById("uploadButton").addEventListener("click", function () {
   const canvas = document.getElementById("canvas");
   const imageInput = document.getElementById("imageInput");
+  const formData = new FormData();
 
-  let imageData;
-  if (canvas.toDataURL() !== "data:,") {
-    imageData = dataURItoBlob(canvas.toDataURL());
-  } else if (imageInput.files.length > 0) {
-    imageData = imageInput.files[0];
+  if (imageInput.files.length > 0) {
+    const imageData = imageInput.files[0];
+    formData.append("palmImage", imageData);
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+  } else if (canvas.toDataURL() !== "data:,") {
+    const imageData = dataURItoBlob(canvas.toDataURL());
+    formData.append("palmImage", imageData, "palmImage.png");
   } else {
     alert("Please select an image to upload.");
     return;
   }
-
-  const formData = new FormData();
-  formData.append("palmImage", imageData);
 
   const modal = document.getElementById("modal");
   const modalText = document.getElementById("modal-text");
@@ -23,7 +23,6 @@ document.getElementById("uploadButton").addEventListener("click", function () {
   modal.style.display = "block";
   modalLoading.style.display = "block";
   modalText.textContent = "Please wait while your palm is being read...";
-  closeSpan.style.pointerEvents = "none";
 
   fetch("http://localhost:3000/api/upload", {
     method: "POST",
@@ -51,8 +50,8 @@ document.getElementById("uploadButton").addEventListener("click", function () {
     .catch((error) => {
       modalText.textContent = error.message;
       modalLoading.style.display = "none";
-      closeSpan.style.pointerEvents = "auto";
     });
+  closeSpan.style.pointerEvents = "auto";
 });
 
 var span = document.getElementsByClassName("close")[0];
