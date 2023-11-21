@@ -26,8 +26,8 @@ h3 {
 }
 
 #preview img {
-  max-height: 250px;
-  width: auto;
+  height: auto;
+  width: 300px;
   margin: 10px auto;
 }
 
