@@ -9,6 +9,8 @@ dotenv.config();
 const goog = process.env.OPENAI_API_KEY;
 const app = express();
 
+app.set("trust proxy", 1);
+
 // Configure multer to use memory storage
 const storage = multer.memoryStorage();
 const upload = multer({
