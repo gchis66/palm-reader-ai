@@ -1,7 +1,6 @@
 body {
   font-family: "Spectral", serif;
   text-align: center;
-  padding: 20px;
   background-color: #f4e8ff; /* Light purple background */
   color: #4a3f35; /* Dark text for readability */
 }
@@ -11,7 +10,6 @@ body {
   margin: auto;
   background: #ffffff;
   border-radius: 15px;
-  padding: 20px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
 }
 
@@ -61,6 +59,7 @@ button:hover {
   height: 100%;
   overflow: auto;
   background-color: rgba(43, 43, 82, 0.9); /* Darker overlay for modal */
+  overflow-x: clip;
 }
 
 .modal-content {
@@ -73,6 +72,11 @@ button:hover {
   overflow-y: auto;
   height: auto;
   position: relative;
+}
+
+#modal-text {
+  font-weight: bold;
+  padding: 10px;
 }
 
 .close {
@@ -136,6 +140,13 @@ button:hover {
   only screen and (max-width: 600px) {
   .modal-content,
   .container {
-    width: 95%;
+    width: 100%;
+  }
+  .close {
+    top: 5px;
+  }
+  .modal-content {
+    margin: 0;
+    padding: 0;
   }
 }
