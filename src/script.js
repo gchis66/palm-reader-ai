@@ -46,17 +46,19 @@ document.getElementById("uploadButton").addEventListener("click", function () {
       modalText.innerHTML = data.message;
       modalLoading.style.display = "none";
       closeSpan.style.pointerEvents = "auto";
+      document.body.style.overflowY = "hidden"; // Disable scrolling
     })
     .catch((error) => {
       modalText.textContent = error.message;
       modalLoading.style.display = "none";
+      closeSpan.style.pointerEvents = "auto";
     });
-  closeSpan.style.pointerEvents = "auto";
 });
 
 var span = document.getElementsByClassName("close")[0];
 span.onclick = function () {
   document.getElementById("modal").style.display = "none";
+  document.body.style.overflowY = "auto"; // Enable scrolling
 };
 
 document.getElementById("imageInput").addEventListener("change", function () {
@@ -72,7 +74,7 @@ document.getElementById("imageInput").addEventListener("change", function () {
     const preview = document.getElementById("preview");
     preview.innerHTML =
       '<img src="' + URL.createObjectURL(imageInput.files[0]) + '">';
-    uploadButton.style.display = "inline-block";
+    uploadButton.style.display = "block";
   }
 });
 
@@ -118,7 +120,7 @@ document.getElementById("snapButton").addEventListener("click", function () {
   preview.innerHTML = '<img src="' + dataURL + '">';
 
   const uploadButton = document.getElementById("uploadButton");
-  uploadButton.style.display = "inline-block";
+  uploadButton.style.display = "block";
 
   cameraStream.style.display = "none";
   snapButton.style.display = "none";

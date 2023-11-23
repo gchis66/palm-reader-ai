@@ -65,7 +65,7 @@ button:hover {
 .modal-content {
   background-color: #fff5ee; /* Lighter background for content */
   color: #4a3f35; /* Dark text for readability */
-  margin: 10% auto;
+  margin: auto;
   padding: 20px;
   border: 1px solid #888;
   width: 50%;
@@ -103,6 +103,18 @@ button:hover {
   height: 80px;
   margin: auto;
   animation: spin 2s linear infinite;
+}
+
+#uploadButton {
+  margin: auto;
+  border: none;
+  position: relative; /* Add this line */
+  box-shadow: 0 0 10px 2px goldenrod; /* Create a golden glow */
+  transition: box-shadow 0.3s;
+}
+
+#uploadButton:hover {
+  box-shadow: 0 0 15px 4px goldenrod; /* Increase glow on hover */
 }
 
 #cameraStream {
