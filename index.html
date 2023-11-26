@@ -12,6 +12,8 @@
     />
     <link rel="icon" type="image/png" href="/images/favicon.svg" />
     <link rel="stylesheet" href="style.css" />
+    <script type="module" src="/src/script.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
     <div class="container">
@@ -39,9 +41,10 @@
         <span class="close">&times;</span>
         <div id="modal-text">Please wait while your palm is being read...</div>
         <div id="modal-loading" class="loader"></div>
+        <div id="card-element" style="display: none">
+          <!-- Stripe card element will be mounted here -->
+        </div>
       </div>
     </div>
-
-    <script type="module" src="/src/script.js"></script>
   </body>
 </html>

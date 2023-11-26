@@ -3,9 +3,11 @@ import multer from "multer";
 import OpenAI from "openai";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+import Stripe from "stripe";
 import dotenv from "dotenv";
 
 dotenv.config();
+const stripe = new Stripe(process.env.STRIPE_API_KEY);
 const goog = process.env.OPENAI_API_KEY;
 const app = express();
 
@@ -25,6 +27,19 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(cors());
 app.use(express.json());
+
+app.post("/create-payment-intent", async (req, res) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: 499, // $4.99, in cents
+      currency: "usd",
+      // Add other necessary payment intent configurations
+    });
+    res.send({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
 
 async function askAboutImages(imageBuffer, prompt) {
   const openai = new OpenAI({
@@ -70,6 +85,8 @@ app.post("/api/upload", upload.single("palmImage"), async (req, res) => {
     <h2>Palm Reading Analysis</h2>
 
 <p>put your introduction here where you briefly describe what you notice about the palm</p>
+
+<!-- PAYWALL -->
 
 <h3>Health and Physical Vitality</h3>
 <p>put your palm reading findings in regards to health and physical vitality here</p>

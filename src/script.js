@@ -1,3 +1,30 @@
+// Initialize Stripe (replace 'your_stripe_public_key' with your actual Stripe public key)
+const stripe = Stripe(
+  "pk_test_51LFOR1EGWtwpkkhtDHyithSNcsokxtwy4dJ2lHmmTczFDd12b4pgZQLVs5bchPBhd3clkDKDQv5kOJtwLJk3ep3u00dwUOozzz"
+);
+// Define a custom style for the Stripe Elements
+const style = {
+  base: {
+    color: "#000",
+    fontWeight: 500,
+    fontFamily: "Source Code Pro, Consolas, Menlo, monospace",
+    fontSize: "16px",
+    fontSmoothing: "antialiased",
+    "::placeholder": {
+      color: "#aab7c4",
+    },
+  },
+  invalid: {
+    color: "#fa755a",
+    iconColor: "#fa755a",
+  },
+};
+
+// Initialize Stripe Elements
+const elements = stripe.elements();
+const cardElement = elements.create("card", { style: style });
+cardElement.mount("#card-element");
+
 document.getElementById("uploadButton").addEventListener("click", function () {
   const canvas = document.getElementById("canvas");
   const imageInput = document.getElementById("imageInput");
@@ -24,7 +51,7 @@ document.getElementById("uploadButton").addEventListener("click", function () {
   modalLoading.style.display = "block";
   modalText.textContent = "Please wait while your palm is being read...";
 
-  fetch("https://palm-reader-app.onrender.com/api/upload", {
+  fetch("http://localhost:3000/api/upload", {
     method: "POST",
     body: formData,
   })
@@ -43,7 +70,14 @@ document.getElementById("uploadButton").addEventListener("click", function () {
       return response.json();
     })
     .then((data) => {
-      modalText.innerHTML = data.message;
+      const [previewContent, fullContent] = splitContent(data.message);
+      modalText.innerHTML = previewContent;
+      document.getElementById("card-element").style.display = "block";
+      const paymentButton = document.createElement("button");
+      paymentButton.textContent = "Unlock Full Reading for $4.99";
+      paymentButton.onclick = () =>
+        openStripeCheckout(previewContent + fullContent);
+      modalText.appendChild(paymentButton);
       modalLoading.style.display = "none";
       closeSpan.style.pointerEvents = "auto";
       document.body.style.overflowY = "hidden"; // Disable scrolling
@@ -137,4 +171,41 @@ function dataURItoBlob(dataURI) {
   }
 
   return new Blob([arrayBuffer], { type: mimeString });
+}
+
+function splitContent(fullText) {
+  const splitIndex = fullText.indexOf("<!-- PAYWALL -->");
+  const previewContent = fullText.substring(0, splitIndex);
+  const fullContent = fullText.substring(splitIndex);
+  return [previewContent, fullContent];
+}
+
+function openStripeCheckout(completeContent) {
+  fetch("http://localhost:3000/create-payment-intent", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      return stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: cardElement,
+        },
+      });
+    })
+    .then((result) => {
+      if (result.error) {
+        console.error(result.error.message);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          document.getElementById("card-element").style.display = "none";
+          document.getElementById("modal-text").innerHTML = completeContent;
+        }
+      }
+    })
+    .catch((error) => {
+      console.error("Payment failed:", error);
+    });
 }
