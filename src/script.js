@@ -1,6 +1,6 @@
 // Initialize Stripe (replace 'your_stripe_public_key' with your actual Stripe public key)
 const stripe = Stripe(
-  "pk_test_51LFOR1EGWtwpkkhtDHyithSNcsokxtwy4dJ2lHmmTczFDd12b4pgZQLVs5bchPBhd3clkDKDQv5kOJtwLJk3ep3u00dwUOozzz"
+  "pk_live_51LFOR1EGWtwpkkhteYPKdviYKkkFCjoE0DC4ZweTNEUVhsW5gsmIUjaLoC3lK6P2UD6uoaId5fIAc7aWXFUEVn2B00OjikTqmE"
 );
 // Define a custom style for the Stripe Elements
 const style = {
