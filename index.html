@@ -41,8 +41,17 @@
         <span class="close">&times;</span>
         <div id="modal-text">Please wait while your palm is being read...</div>
         <div id="modal-loading" class="loader"></div>
-        <div id="card-element" style="display: none">
-          <!-- Stripe card element will be mounted here -->
+        <div id="payment-info-container" style="display: none">
+          <div id="card-element"></div>
+          <img
+            id="stripe-img"
+            src="/images/PoweredbyStripe-blurple.svg"
+            alt="Powered by Stripe"
+          />
+          <p>
+            <img src="/images/lock-icon.svg" alt="Secure" /> We do not store
+            your financial information
+          </p>
         </div>
       </div>
     </div>

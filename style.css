@@ -139,6 +139,10 @@ button:hover {
   background-color: #7a4298;
 }
 
+#stripe-img {
+  width: 30%;
+}
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
@@ -160,5 +164,12 @@ button:hover {
   .modal-content {
     margin: 0;
     padding: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  #stripe-img {
+    margin-top: 10%;
+    width: 40%;
   }
 }

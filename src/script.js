@@ -72,8 +72,11 @@ document.getElementById("uploadButton").addEventListener("click", function () {
     .then((data) => {
       const [previewContent, fullContent] = splitContent(data.message);
       modalText.innerHTML = previewContent;
-      document.getElementById("card-element").style.display = "block";
+      document.getElementById("payment-info-container").style.display = "block";
       const paymentButton = document.createElement("button");
+      paymentButton.style.position = "relative";
+      paymentButton.style.boxShadow = "0 0 10px 2px goldenrod";
+      paymentButton.style.transition = "box-shadow 0.3s";
       paymentButton.textContent = "Unlock Full Reading for $4.99";
       paymentButton.onclick = () =>
         openStripeCheckout(previewContent + fullContent);
