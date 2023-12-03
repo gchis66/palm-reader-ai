@@ -35,8 +35,10 @@ app.post("/create-payment-intent", async (req, res) => {
       currency: "usd",
       // Add other necessary payment intent configurations
     });
+    console.log("Payment Intent created:", paymentIntent); // Log the Payment Intent
     res.send({ clientSecret: paymentIntent.client_secret });
   } catch (error) {
+    console.error("Error in create-payment-intent:", error); // Log any errors
     res.status(500).send({ error: error.message });
   }
 });
