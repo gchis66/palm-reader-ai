@@ -23,6 +23,11 @@ h3 {
   margin-bottom: 20px;
 }
 
+#disclaimer {
+  font-weight: bold;
+  margin: 0;
+}
+
 #preview img {
   height: auto;
   width: 300px;
