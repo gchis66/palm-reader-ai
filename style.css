@@ -30,7 +30,11 @@ body {
 #card-element {
   margin-bottom: 20px;
 }
-
+#trust-signals {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
 .container {
   width: 80%;
   margin: auto;
@@ -194,7 +198,7 @@ button:hover {
   }
   .modal-content {
     margin: 0;
-    padding: 0;
+    padding: 0 0 10px 0;
   }
 }
 
@@ -202,5 +206,8 @@ button:hover {
   #stripe-img {
     margin-top: 10%;
     width: 40%;
+  }
+  #trust-signals {
+    display: block;
   }
 }
