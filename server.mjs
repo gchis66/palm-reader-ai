@@ -28,20 +28,20 @@ app.use(limiter);
 app.use(cors());
 app.use(express.json());
 
-app.post("/create-payment-intent", async (req, res) => {
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: 499, // $4.99, in cents
-      currency: "usd",
-      // Add other necessary payment intent configurations
-    });
-    console.log("Payment Intent created:", paymentIntent); // Log the Payment Intent
-    res.send({ clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    console.error("Error in create-payment-intent:", error); // Log any errors
-    res.status(500).send({ error: error.message });
-  }
-});
+// app.post("/create-payment-intent", async (req, res) => {
+//   try {
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount: 499, // $4.99, in cents
+//       currency: "usd",
+//       // Add other necessary payment intent configurations
+//     });
+//     console.log("Payment Intent created:", paymentIntent); // Log the Payment Intent
+//     res.send({ clientSecret: paymentIntent.client_secret });
+//   } catch (error) {
+//     console.error("Error in create-payment-intent:", error); // Log any errors
+//     res.status(500).send({ error: error.message });
+//   }
+// });
 
 async function askAboutImages(imageBuffer, prompt) {
   const openai = new OpenAI({
