@@ -187,6 +187,94 @@ button:hover {
   }
 }
 
+/* Footer Styles */
+.footer {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  font-size: large;
+}
+
+.footer a {
+  color: #9954bb; /* Match the link color with the theme of your site */
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* Common styles for Terms of Service and Privacy Policy pages */
+.legal-page-container {
+  font-family: "Spectral", serif;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.legal-page-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.legal-page-header h1 {
+  color: #9954bb;
+}
+
+.legal-page-content {
+  text-align: left;
+}
+
+.legal-page-content h2 {
+  color: #4a3f35;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.legal-page-content p,
+.legal-page-content ul,
+.legal-page-content ol {
+  margin-bottom: 15px;
+}
+
+.legal-page-content li {
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+
+.legal-page-content a {
+  color: #9954bb;
+  text-decoration: none;
+}
+
+.legal-page-content a:hover {
+  text-decoration: underline;
+}
+
+/* Footer link back to the main page */
+.legal-page-footer {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.legal-page-footer a {
+  font-weight: bold;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .legal-page-container {
+    width: 90%;
+    margin: 10px auto;
+    padding: 15px;
+  }
+}
+
 @media only screen and (max-width: 960px) and (orientation: landscape),
   only screen and (max-width: 600px) {
   .modal-content,
