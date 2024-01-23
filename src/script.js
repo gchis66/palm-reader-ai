@@ -71,7 +71,7 @@ document.getElementById("uploadButton").addEventListener("click", function () {
     })
     .then((data) => {
       const [previewContent, fullContent] = splitContent(data.message);
-      modalText.innerHTML = previewContent + fullContent;
+      modalText.innerHTML = previewContent;
       document.getElementById("payment-info-container").style.display = "block";
       const paymentButton = document.createElement("button");
       paymentButton.style.position = "relative";
