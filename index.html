@@ -58,11 +58,177 @@
         </div>
       </div>
     </div>
+
+    <!-- Terms of Service Modal -->
+    <div id="termsModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('termsModal')">&times;</span>
+        <div class="legal-page-container">
+          <div class="legal-page-header">
+            <h1>Terms of Service</h1>
+          </div>
+          <div class="legal-page-content">
+            <h2>Introduction</h2>
+            <p>
+              Welcome to Palm Reveal! Our services allow users to get insights
+              into their personality and future through palm readings.
+            </p>
+
+            <h2>Use of Service</h2>
+            <p>
+              By using Palm Reveal, you agree to these terms and conditions. If
+              you do not agree with any part of these terms, please do not use
+              our services.
+            </p>
+
+            <h2>Service Description</h2>
+            <p>
+              Palm Reveal provides a palm reading service that offers
+              entertainment and personal insight. It is not a substitute for
+              professional advice.
+            </p>
+
+            <h2>Privacy and Security</h2>
+            <p>
+              Palm Reveal is committed to your privacy. We do not store palm
+              images, payment information, or any personal data.
+            </p>
+
+            <h2>User Obligations</h2>
+            <p>
+              You agree to provide accurate palm images for the reading. You are
+              responsible for understanding that the readings are for
+              entertainment purposes only.
+            </p>
+
+            <h2>Intellectual Property</h2>
+            <p>
+              All content provided by Palm Reveal is the property of Palm Reveal
+              and is protected by copyright laws.
+            </p>
+
+            <h2>Limitation of Liability</h2>
+            <p>
+              Palm Reveal is not liable for any decisions made based on a
+              reading from our service.
+            </p>
+
+            <h2>Changes to Terms</h2>
+            <p>
+              We reserve the right to modify these terms at any time. Your
+              continued use of the service signifies your acceptance of any
+              changes.
+            </p>
+
+            <h2>Contact Us</h2>
+            <p>
+              If you have any questions or concerns about these terms, please
+              contact us at gchis66@gmail.com
+            </p>
+
+            <p>Last updated on 1/23/24</p>
+          </div>
+          <div class="legal-page-footer">
+            <a href="/">Return to Home</a>
+          </div>
+        </div>
+        <!-- Add Terms of Service Content Here -->
+      </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacyModal" class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="closeModal('privacyModal')">&times;</span>
+        <div class="legal-page-container">
+          <div class="legal-page-header">
+            <h1>Privacy Policy</h1>
+          </div>
+          <div class="legal-page-content">
+            <h2>Introduction</h2>
+            <p>
+              At Palm Reveal, accessible from www.palmreveal.com, one of our
+              main priorities is the privacy of our visitors. This Privacy
+              Policy document outlines the types of information that is not
+              collected and recorded by Palm Reveal and how we use it.
+            </p>
+
+            <h2>Information We Do Not Collect</h2>
+            <p>
+              Palm Reveal is designed to not collect or store any personal
+              information, palm images, or payment details. Users can interact
+              with our service anonymously.
+            </p>
+
+            <h2>Consent</h2>
+            <p>
+              By using our website, you hereby consent to our Privacy Policy and
+              agree to its terms.
+            </p>
+
+            <h2>No Storage of Images or Payment Information</h2>
+            <p>
+              We do not store palm images or payment information. Once the palm
+              reading is provided to the user, the image and all associated data
+              are immediately discarded.
+            </p>
+
+            <h2>No Use of Cookies</h2>
+            <p>Our website does not use cookies.</p>
+
+            <h2>Third Party Privacy Policies</h2>
+            <p>
+              Palm Reveal's Privacy Policy does not apply to other advertisers
+              or websites.
+            </p>
+
+            <h2>CCPA Privacy Rights (Do Not Sell My Personal Information)</h2>
+            <p>We do not collect or sell personal information of any kind.</p>
+
+            <h2>GDPR Data Protection Rights</h2>
+            <p>
+              We aim to ensure you are fully aware of all of your data
+              protection rights. Since we do not collect personal data, these
+              rights are inherently respected.
+            </p>
+
+            <h2>Children's Information</h2>
+            <p>
+              Palm Reveal does not collect any information from children under
+              the age of 13.
+            </p>
+
+            <h2>Changes to This Privacy Policy</h2>
+            <p>
+              We may update our Privacy Policy from time to time. We will notify
+              you of any changes by posting the new Privacy Policy on this page.
+            </p>
+
+            <h2>Contact Us</h2>
+            <p>
+              For any questions or suggestions about our Privacy Policy, do not
+              hesitate to contact us at gchis66@gmail.com.
+            </p>
+
+            <p>Last updated on 1/23/24</p>
+          </div>
+          <div class="legal-page-footer">
+            <a href="/">Return to Home</a>
+          </div>
+        </div>
+        <!-- Add Privacy Policy Content Here -->
+      </div>
+    </div>
+
     <!-- Footer with links to Terms of Service and Privacy Policy -->
     <footer class="footer">
-      <a href="/terms-of-service.html" target="_blank">Terms of Service</a>
+      <a href="javascript:void(0)" onclick="openModal('termsModal')"
+        >Terms of Service</a
+      >
       |
-      <a href="/privacy-policy.html" target="_blank">Privacy Policy</a>
+      <a href="javascript:void(0)" onclick="openModal('privacyModal')"
+        >Privacy Policy</a
+      >
     </footer>
     <script>
       window.va =
@@ -70,6 +236,13 @@
         function () {
           (window.vaq = window.vaq || []).push(arguments);
         };
+      function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+      }
     </script>
     <script defer src="/_vercel/insights/script.js"></script>
   </body>
