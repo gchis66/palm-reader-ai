@@ -50,7 +50,7 @@ async function askAboutImages(imageBuffer, prompt) {
   const imageAsBase64 = imageBuffer.toString("base64");
 
   const response = await openai.chat.completions.create({
-    model: "gpt-4o",
+    model: "gpt-4-vision-preview",
     messages: [
       {
         role: "system",
