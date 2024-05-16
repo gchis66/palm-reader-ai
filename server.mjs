@@ -63,7 +63,10 @@ async function askAboutImages(imageBuffer, prompt) {
           { type: "text", text: prompt },
           {
             type: "image_url",
-            image_url: `data:image/jpg;base64,${imageAsBase64}`,
+            image_url: {
+              url: `data:image/jpg;base64,${imageAsBase64}`,
+              detail: "high",
+            },
           },
         ],
       },
