@@ -341,13 +341,11 @@ button:hover {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  color: #ffffff;
   transition: all 0.3s ease;
 }
 
 .swiper-button-next:after,
 .swiper-button-prev:after {
-  font-size: 18px;
   font-weight: bold;
 }
 
