@@ -1,10 +1,27 @@
-body {
-  font-family: "Spectral", serif;
-  text-align: center;
-  background-color: #f4e8ff; /* Light purple background */
-  color: #4a3f35; /* Dark text for readability */
+:root {
+  --swiper-navigation-size: 24px !important;
 }
-
+body {
+  font-family: "Lato", sans-serif;
+  text-align: center;
+  /* background-color: #f0e6ff; */
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 20px;
+  background-image: url("/images/full-bloom.webp");
+}
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(98, 0, 238, 0.1);
+  z-index: -1;
+  pointer-events: none;
+}
 .StripeElement {
   background-color: white;
   padding: 16px 16px;
@@ -30,47 +47,52 @@ body {
 #card-element {
   margin-bottom: 20px;
 }
+
 #trust-signals {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
 }
+
 .container {
-  width: 80%;
-  margin: auto;
+  max-width: 600px;
+  margin: 0 auto;
   background: #ffffff;
   border-radius: 15px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding: 30px;
 }
 
 h1 {
-  color: #9954bb; /* Deeper purple for headers */
+  color: #6200ee;
   font-size: 2.5em;
+  margin-bottom: 10px;
 }
 
 h3 {
-  color: #9954bb;
+  color: #6200ee;
   margin-bottom: 20px;
 }
 
 #disclaimer {
   font-weight: bold;
-  margin: 0;
+  margin-bottom: 20px;
+  color: #666;
 }
 
 #preview img {
   height: auto;
   width: 300px;
   margin: 10px auto;
+  border-radius: 15px;
 }
 
 input[type="file"],
 button {
-  font-family: "Spectral", serif;
   background-color: #9954bb;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 15px;
   padding: 10px 20px;
   margin: 10px;
   cursor: pointer;
@@ -87,19 +109,19 @@ button:hover {
 .modal {
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 20;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(43, 43, 82, 0.9); /* Darker overlay for modal */
+  background-color: rgba(43, 43, 82, 0.9);
   overflow-x: clip;
 }
 
 .modal-content {
-  background-color: #fff5ee; /* Lighter background for content */
-  color: #4a3f35; /* Dark text for readability */
+  background-color: #fff5ee;
+  color: #4a3f35;
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
@@ -140,16 +162,21 @@ button:hover {
   animation: spin 2s linear infinite;
 }
 
-#uploadButton {
-  margin: auto;
+#uploadButton,
+.paymentbtn {
+  background-color: #4caf50;
+  margin: 20px auto;
   border: none;
-  position: relative; /* Add this line */
-  box-shadow: 0 0 10px 2px goldenrod; /* Create a golden glow */
+  position: relative;
+  box-shadow: 0 0 10px 2px goldenrod;
   transition: box-shadow 0.3s;
+  animation: bounce 2s infinite;
 }
 
-#uploadButton:hover {
-  box-shadow: 0 0 15px 4px goldenrod; /* Increase glow on hover */
+#uploadButton:hover,
+.paymentbtn:hover {
+  box-shadow: 0 0 15px 4px goldenrod;
+  background-color: #3d8c40;
 }
 
 #cameraStream {
@@ -162,16 +189,16 @@ button:hover {
 
 #snapButton {
   display: none;
-  background-color: #9954bb;
+  background-color: #4caf50;
   color: white;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 15px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 #snapButton:hover {
-  background-color: #7a4298;
+  background-color: #3d8c40;
 }
 
 #stripe-img {
@@ -187,16 +214,31 @@ button:hover {
   }
 }
 
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
 /* Footer Styles */
 .footer {
   text-align: center;
   margin-top: 20px;
-  padding: 10px;
   font-size: large;
 }
 
 .footer a {
-  color: #9954bb; /* Match the link color with the theme of your site */
+  color: #9954bb;
   text-decoration: none;
   margin: 0 10px;
 }
@@ -207,14 +249,11 @@ button:hover {
 
 /* Common styles for Terms of Service and Privacy Policy pages */
 .legal-page-container {
-  font-family: "Spectral", serif;
   line-height: 1.6;
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .legal-page-header {
@@ -256,6 +295,70 @@ button:hover {
   text-decoration: underline;
 }
 
+/* Updated Testimonials */
+.testimonial-slider {
+  max-width: 600px;
+  margin: 25px auto;
+  position: relative;
+}
+
+.swiper-container {
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 30px 60px;
+}
+
+.testimonial {
+  text-align: center;
+}
+
+.testimonial blockquote {
+  font-style: italic;
+  font-size: 1.1em;
+  color: #333;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.testimonial blockquote::before {
+  content: open-quote;
+}
+
+.testimonial blockquote::after {
+  content: close-quote;
+}
+
+.testimonial cite {
+  font-weight: bold;
+  /* color: #6200ee; */
+  font-style: normal;
+}
+
+/* Updated navigation arrows */
+.swiper-button-next,
+.swiper-button-prev {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.swiper-button-next:after,
+.swiper-button-prev:after {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.swiper-button-next {
+  right: -20px;
+}
+
+.swiper-button-prev {
+  left: -20px;
+}
+
 /* Footer link back to the main page */
 .legal-page-footer {
   text-align: center;
@@ -291,11 +394,35 @@ button:hover {
 }
 
 @media (max-width: 600px) {
+  .container {
+    padding: 0;
+  }
   #stripe-img {
     margin-top: 10%;
     width: 40%;
   }
   #trust-signals {
     display: block;
+  }
+  .swiper-container {
+    padding: 20px 40px;
+  }
+  .testimonial blockquote {
+    font-size: 1em;
+  }
+  .swiper-button-next,
+  .swiper-button-prev {
+    width: 30px;
+    height: 30px;
+  }
+  .swiper-button-next:after,
+  .swiper-button-prev:after {
+    font-size: 14px;
+  }
+  .swiper-button-next {
+    right: -15px;
+  }
+  .swiper-button-prev {
+    left: -15px;
   }
 }

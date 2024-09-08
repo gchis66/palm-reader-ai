@@ -12,6 +12,11 @@
     />
     <link rel="icon" type="image/png" href="/images/favicon2.ico" />
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script type="module" src="/src/script.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
   </head>
@@ -30,9 +35,7 @@
       <video id="cameraStream" autoplay hidden></video>
       <canvas id="canvas" width="640" height="480" hidden></canvas>
       <button id="snapButton" hidden>Snap Photo</button>
-      <button id="uploadButton" style="display: none">
-        Upload and Read Palm
-      </button>
+      <button id="uploadButton" style="display: none">Read my palm</button>
       <div id="preview"></div>
     </div>
 
@@ -129,7 +132,15 @@
             <p>Last updated on 1/23/24</p>
           </div>
           <div class="legal-page-footer">
-            <a href="/">Return to Home</a>
+            <span
+              style="
+                font-weight: bold;
+                text-decoration: underline;
+                cursor: pointer;
+              "
+              onclick="closeModal('termsModal')"
+              >Close</span
+            >
           </div>
         </div>
         <!-- Add Terms of Service Content Here -->
@@ -213,13 +224,53 @@
             <p>Last updated on 1/23/24</p>
           </div>
           <div class="legal-page-footer">
-            <a href="/">Return to Home</a>
+            <span
+              style="
+                font-weight: bold;
+                text-decoration: underline;
+                cursor: pointer;
+              "
+              onclick="closeModal('privacyModal')"
+              >Close</span
+            >
           </div>
         </div>
         <!-- Add Privacy Policy Content Here -->
       </div>
     </div>
-
+    <!-- Testimonial Slider -->
+    <div class="testimonial-slider">
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="testimonial">
+              <blockquote>
+                Very cool and the reading was way more detailed than I expected.
+                Nice work!
+              </blockquote>
+              - Luiz B.
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="testimonial">
+              <blockquote>Surprisingly spot on haha!</blockquote>
+              - Jose V.
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="testimonial">
+              <blockquote>
+                I don't typically take this sort of thing seriously but it was
+                pretty interesting to see what my palm reading would be.
+              </blockquote>
+              - Luis P.
+            </div>
+          </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
     <!-- Footer with links to Terms of Service and Privacy Policy -->
     <footer class="footer">
       <a href="javascript:void(0)" onclick="openModal('termsModal')"

@@ -1,3 +1,21 @@
+document.addEventListener("DOMContentLoaded", function () {
+  new Swiper(".swiper-container", {
+    loop: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    autoplay: {
+      delay: 5000,
+      disableOnInteraction: false,
+    },
+    effect: "fade",
+    fadeEffect: {
+      crossFade: true,
+    },
+  });
+});
+
 // Initialize Stripe (replace 'your_stripe_public_key' with your actual Stripe public key)
 const stripe = Stripe(
   "pk_live_51LFOR1EGWtwpkkhteYPKdviYKkkFCjoE0DC4ZweTNEUVhsW5gsmIUjaLoC3lK6P2UD6uoaId5fIAc7aWXFUEVn2B00OjikTqmE"
@@ -74,9 +92,7 @@ document.getElementById("uploadButton").addEventListener("click", function () {
       modalText.innerHTML = previewContent;
       document.getElementById("payment-info-container").style.display = "block";
       const paymentButton = document.createElement("button");
-      paymentButton.style.position = "relative";
-      paymentButton.style.boxShadow = "0 0 10px 2px goldenrod";
-      paymentButton.style.transition = "box-shadow 0.3s";
+      paymentButton.classList.add("paymentbtn");
       paymentButton.textContent = "Unlock Full Reading for $4.99";
       paymentButton.onclick = () =>
         openStripeCheckout(previewContent + fullContent);
