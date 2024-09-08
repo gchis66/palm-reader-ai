@@ -349,14 +349,6 @@ button:hover {
   font-weight: bold;
 }
 
-.swiper-button-next {
-  right: -20px;
-}
-
-.swiper-button-prev {
-  left: -20px;
-}
-
 /* Footer link back to the main page */
 .legal-page-footer {
   text-align: center;
