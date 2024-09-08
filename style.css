@@ -409,10 +409,4 @@ button:hover {
   .swiper-button-prev:after {
     font-size: 14px;
   }
-  .swiper-button-next {
-    right: -15px;
-  }
-  .swiper-button-prev {
-    left: -15px;
-  }
 }
