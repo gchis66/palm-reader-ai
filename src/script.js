@@ -88,6 +88,7 @@ document.getElementById("uploadButton").addEventListener("click", function () {
       return response.json();
     })
     .then((data) => {
+      console.log(data.message);
       const [previewContent, fullContent] = splitContent(data.message);
       modalText.innerHTML = previewContent;
       document.getElementById("payment-info-container").style.display = "block";
