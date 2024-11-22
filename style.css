@@ -1,17 +1,16 @@
 :root {
   --swiper-navigation-size: 24px !important;
 }
-
 body {
   font-family: "Lato", sans-serif;
   text-align: center;
+  /* background-color: #f0e6ff; */
   color: #333;
   line-height: 1.6;
   margin: 0;
   padding: 20px;
   background-image: url("/images/full-bloom.webp");
 }
-
 body::after {
   content: "";
   position: fixed;
@@ -23,7 +22,6 @@ body::after {
   z-index: -1;
   pointer-events: none;
 }
-
 .StripeElement {
   background-color: white;
   padding: 16px 16px;
@@ -82,42 +80,11 @@ h3 {
   color: #666;
 }
 
-.camera-container {
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.camera-preview {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  aspect-ratio: 9/16;
-  object-fit: cover;
-  border-radius: 15px;
-  margin: 20px 0;
-}
-
-.captured-image {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  aspect-ratio: 9/16;
-  object-fit: contain;
-  border-radius: 15px;
-  margin: 20px 0;
-}
-
 #preview img {
   height: auto;
   width: 300px;
   margin: 10px auto;
   border-radius: 15px;
-  aspect-ratio: 9/16;
-  object-fit: contain;
 }
 
 input[type="file"],
@@ -213,15 +180,11 @@ button:hover {
 }
 
 #cameraStream {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-  margin: auto;
-  padding: 20px;
   display: none;
-  border-radius: 15px;
+  margin: auto;
+  width: 300px;
+  height: auto;
+  padding: 20px;
 }
 
 #snapButton {
@@ -267,6 +230,7 @@ button:hover {
   }
 }
 
+/* Footer Styles */
 .footer {
   text-align: center;
   margin-top: 20px;
@@ -283,6 +247,7 @@ button:hover {
   text-decoration: underline;
 }
 
+/* Common styles for Terms of Service and Privacy Policy pages */
 .legal-page-container {
   line-height: 1.6;
   max-width: 800px;
@@ -330,6 +295,7 @@ button:hover {
   text-decoration: underline;
 }
 
+/* Updated Testimonials */
 .testimonial-slider {
   max-width: 600px;
   margin: 25px auto;
@@ -365,9 +331,11 @@ button:hover {
 
 .testimonial cite {
   font-weight: bold;
+  /* color: #6200ee; */
   font-style: normal;
 }
 
+/* Updated navigation arrows */
 .swiper-button-next,
 .swiper-button-prev {
   width: 40px;
@@ -381,6 +349,7 @@ button:hover {
   font-weight: bold;
 }
 
+/* Footer link back to the main page */
 .legal-page-footer {
   text-align: center;
   margin-top: 30px;
@@ -390,10 +359,7 @@ button:hover {
   font-weight: bold;
 }
 
-#canvas {
-  display: none;
-}
-
+/* Responsive design for smaller screens */
 @media (max-width: 768px) {
   .legal-page-container {
     width: 90%;
