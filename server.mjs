@@ -40,9 +40,9 @@ async function askAboutImages(imageBuffer, prompt) {
     const mediaType = "image/jpeg"; // Adjust based on your image type
 
     const response = await anthropic.messages.create({
-      model: "claude-3-opus-20240229",
+      model: "claude-3-5-sonnet-20241022",
       max_tokens: 4000,
-      temperature: 1.1,
+      temperature: 0.5,
       messages: [
         {
           role: "user",
