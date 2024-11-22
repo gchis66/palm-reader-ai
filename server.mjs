@@ -87,7 +87,7 @@ app.post("/create-payment-intent", async (req, res) => {
   }
 });
 
-app.post("/api/uploads", upload.single("palmImage"), async (req, res) => {
+app.post("/api/upload", upload.single("palmImage"), async (req, res) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
