@@ -84,7 +84,7 @@ h3 {
 
 .camera-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 300px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -95,7 +95,7 @@ h3 {
   width: 100%;
   max-width: 300px;
   height: auto;
-  aspect-ratio: 16/9;
+  aspect-ratio: 9/16;
   object-fit: cover;
   border-radius: 15px;
   margin: 20px 0;
@@ -105,7 +105,7 @@ h3 {
   width: 100%;
   max-width: 300px;
   height: auto;
-  aspect-ratio: 16/9;
+  aspect-ratio: 9/16;
   object-fit: contain;
   border-radius: 15px;
   margin: 20px 0;
@@ -116,7 +116,7 @@ h3 {
   width: 300px;
   margin: 10px auto;
   border-radius: 15px;
-  aspect-ratio: 16/9;
+  aspect-ratio: 9/16;
   object-fit: contain;
 }
 
