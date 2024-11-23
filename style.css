@@ -108,31 +108,41 @@ button:hover {
   background-color: #7a4298;
 }
 
+/* Updated Modal Styles */
 .modal {
   display: none;
   position: fixed;
-  z-index: 20;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   background-color: rgba(43, 43, 82, 0.9);
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .modal-content {
   background-color: #fff5ee;
   color: #4a3f35;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 90%;
+  max-width: 800px;
   margin: 20px auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 90%;
-  max-width: 800px;
-  height: calc(100vh - 40px);
-  position: relative;
+  border-radius: 8px;
   box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
+  max-height: calc(100% - 40px);
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 
 #modal-text {
@@ -141,6 +151,16 @@ button:hover {
   width: 100%;
   box-sizing: border-box;
   overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+#payment-info-container {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  margin-top: 20px;
 }
 
 .close {
@@ -151,17 +171,26 @@ button:hover {
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
-  z-index: 30;
+  z-index: 1010;
   background-color: rgba(255, 245, 238, 0.8);
   padding: 5px 10px;
   border-radius: 50%;
   line-height: 1;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .close:hover,
 .close:focus {
   color: black;
   text-decoration: none;
+  background-color: rgba(255, 245, 238, 0.95);
 }
 
 .loader {
@@ -215,6 +244,18 @@ button:hover {
 
 #stripe-img {
   width: 30%;
+}
+
+.StripeElement-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+
+.StripeElement {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 40px;
 }
 
 @keyframes spin {
@@ -416,35 +457,64 @@ button:hover {
 
 /* Mobile-specific styles */
 @media (max-width: 480px) {
+  .modal {
+    padding: 0;
+  }
+
   .modal-content {
     width: 100%;
-    height: 100vh;
+    height: 100%;
     margin: 0;
     padding: 15px;
+    border: none;
     border-radius: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 100%;
   }
 
   #modal-text {
     font-size: 14px;
     line-height: 1.4;
-    padding: 5px;
+    padding: 10px 5px;
+    margin-top: 40px;
+  }
+
+  #payment-info-container {
+    padding: 10px 5px;
   }
 
   .close {
     top: 10px;
     right: 10px;
     font-size: 24px;
+    width: 36px;
+    height: 36px;
   }
 
-  #payment-info-container {
-    width: 100%;
+  #modal-text h2,
+  #modal-text h3,
+  #modal-text p {
+    max-width: 100%;
     box-sizing: border-box;
-    padding: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
-  /* Ensure Stripe elements stay within container */
-  .StripeElement {
-    width: 100%;
-    box-sizing: border-box;
+  #card-element {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+}
+
+/* Handle landscape orientation */
+@media (max-width: 960px) and (orientation: landscape) {
+  .modal-content {
+    height: auto;
+    max-height: calc(100vh - 20px);
+    margin: 10px auto;
   }
 }

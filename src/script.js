@@ -55,12 +55,38 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.style.display = "none";
   document.body.appendChild(canvas);
 
-  // Modal close handler - only through X button
+  // Function to lock body scroll
+  function lockBodyScroll() {
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+  }
+
+  // Function to unlock body scroll
+  function unlockBodyScroll() {
+    const scrollY = document.body.style.top;
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.width = "";
+    window.scrollTo(0, parseInt(scrollY || "0") * -1);
+  }
+
+  // Function to ensure modal content fits viewport
+  function adjustModalContent() {
+    const modalContent = document.querySelector(".modal-content");
+    const windowHeight = window.innerHeight;
+    const modalMargin = window.innerWidth <= 480 ? 0 : 40;
+    modalContent.style.maxHeight = `${windowHeight - modalMargin}px`;
+  }
+
+  // Modal close handler
   closeSpan.addEventListener("click", function () {
     modal.style.display = "none";
     modalText.textContent = "";
     document.getElementById("payment-info-container").style.display = "none";
-    document.body.style.overflow = "auto"; // Restore body scroll
+    unlockBodyScroll();
+
     // Reset camera elements
     cameraStream.style.display = "none";
     snapButton.style.display = "none";
@@ -206,10 +232,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     modal.style.display = "block";
+    lockBodyScroll();
+    adjustModalContent();
     modalLoading.style.display = "block";
     modalText.textContent = "Please wait while your palm is being read...";
     closeSpan.style.pointerEvents = "none";
-    document.body.style.overflow = "hidden"; // Prevent body scroll when modal is open
 
     try {
       const response = await fetch(
@@ -249,6 +276,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
+  // Handle resize events
+  let resizeTimeout;
+  window.addEventListener("resize", function () {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function () {
+      if (modal.style.display === "block") {
+        adjustModalContent();
+      }
+    }, 250);
+  });
+
   function splitContent(fullText) {
     const splitIndex = fullText.indexOf("<!-- PAYWALL -->");
     const previewContent = fullText.substring(0, splitIndex);
@@ -278,6 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (result.paymentIntent.status === "succeeded") {
             document.getElementById("card-element").style.display = "none";
             document.getElementById("modal-text").innerHTML = completeContent;
+            adjustModalContent(); // Readjust modal content after updating
           }
         }
       })
