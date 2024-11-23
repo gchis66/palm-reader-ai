@@ -1,16 +1,17 @@
 :root {
   --swiper-navigation-size: 24px !important;
 }
+
 body {
   font-family: "Lato", sans-serif;
   text-align: center;
-  /* background-color: #f0e6ff; */
   color: #333;
   line-height: 1.6;
   margin: 0;
   padding: 20px;
   background-image: url("/images/full-bloom.webp");
 }
+
 body::after {
   content: "";
   position: fixed;
@@ -22,6 +23,7 @@ body::after {
   z-index: -1;
   pointer-events: none;
 }
+
 .StripeElement {
   background-color: white;
   padding: 16px 16px;
@@ -116,7 +118,7 @@ button:hover {
   height: 100%;
   overflow: auto;
   background-color: rgba(43, 43, 82, 0.9);
-  overflow-x: clip;
+  overflow-x: hidden;
 }
 
 .modal-content {
@@ -125,15 +127,21 @@ button:hover {
   margin: auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 50%;
+  width: 90%;
+  max-width: 800px;
   overflow-y: auto;
   height: auto;
   position: relative;
+  word-wrap: break-word;
+  box-sizing: border-box;
 }
 
 #modal-text {
   font-weight: bold;
   padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
 }
 
 .close {
@@ -143,13 +151,18 @@ button:hover {
   right: 20px;
   font-size: 28px;
   font-weight: bold;
+  cursor: pointer;
+  z-index: 30;
+  background-color: rgba(255, 245, 238, 0.8);
+  padding: 5px 10px;
+  border-radius: 50%;
+  line-height: 1;
 }
 
 .close:hover,
 .close:focus {
   color: black;
   text-decoration: none;
-  cursor: pointer;
 }
 
 .loader {
@@ -331,7 +344,6 @@ button:hover {
 
 .testimonial cite {
   font-weight: bold;
-  /* color: #6200ee; */
   font-style: normal;
 }
 
@@ -370,41 +382,73 @@ button:hover {
 
 @media only screen and (max-width: 960px) and (orientation: landscape),
   only screen and (max-width: 600px) {
-  .modal-content,
-  .container {
-    width: 100%;
-  }
-  .close {
-    top: 5px;
-  }
   .modal-content {
-    margin: 0;
-    padding: 0 0 10px 0;
+    width: 95%;
+    margin: 10px auto;
+    padding: 15px;
   }
-}
 
-@media (max-width: 600px) {
+  .close {
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+  }
+
+  #modal-text {
+    padding: 5px;
+  }
+
+  #payment-info-container {
+    padding: 10px;
+  }
+
   .container {
     padding: 0;
   }
+
   #stripe-img {
     margin-top: 10%;
     width: 40%;
   }
+
   #trust-signals {
     display: block;
   }
+}
+
+/* Additional mobile-specific styles */
+@media (max-width: 480px) {
+  .modal-content {
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  #modal-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .close {
+    top: 5px;
+    right: 5px;
+  }
+
   .swiper-container {
     padding: 20px 40px;
   }
+
   .testimonial blockquote {
     font-size: 1em;
   }
+
   .swiper-button-next,
   .swiper-button-prev {
     width: 30px;
     height: 30px;
   }
+
   .swiper-button-next:after,
   .swiper-button-prev:after {
     font-size: 14px;

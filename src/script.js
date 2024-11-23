@@ -47,20 +47,51 @@ document.addEventListener("DOMContentLoaded", function () {
   const preview = document.getElementById("preview");
   const uploadButton = document.getElementById("uploadButton");
   const imageInput = document.getElementById("imageInput");
+  const modal = document.getElementById("modal");
+  const modalText = document.getElementById("modal-text");
+  const modalLoading = document.getElementById("modal-loading");
+  const closeSpan = document.getElementsByClassName("close")[0];
 
   canvas.style.display = "none";
   document.body.appendChild(canvas);
 
+  // Add modal close handlers
+  closeSpan.addEventListener("click", function () {
+    modal.style.display = "none";
+    modalText.textContent = "";
+    document.getElementById("payment-info-container").style.display = "none";
+    // Reset camera elements
+    cameraStream.style.display = "none";
+    snapButton.style.display = "none";
+    if (cameraStream.srcObject) {
+      cameraStream.srcObject.getTracks().forEach((track) => track.stop());
+    }
+  });
+
+  // Click outside modal to close
+  window.addEventListener("click", function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+      modalText.textContent = "";
+      document.getElementById("payment-info-container").style.display = "none";
+      // Reset camera elements
+      cameraStream.style.display = "none";
+      snapButton.style.display = "none";
+      if (cameraStream.srcObject) {
+        cameraStream.srcObject.getTracks().forEach((track) => track.stop());
+      }
+    }
+  });
+
   // Function to calculate optimal dimensions while maintaining aspect ratio
   function calculateOptimalDimensions(width, height) {
-    const MAX_WIDTH = 1092; // Maximum width for 1:1 aspect ratio per Anthropic docs
-    const MAX_HEIGHT = 1092; // Maximum height for 1:1 aspect ratio per Anthropic docs
-    const MAX_MEGAPIXELS = 1.15; // Maximum recommended megapixels
+    const MAX_WIDTH = 1092;
+    const MAX_HEIGHT = 1092;
+    const MAX_MEGAPIXELS = 1.15;
 
     let newWidth = width;
     let newHeight = height;
 
-    // Check if dimensions exceed maximum allowed
     if (width > MAX_WIDTH || height > MAX_HEIGHT) {
       if (width > height) {
         newWidth = MAX_WIDTH;
@@ -71,7 +102,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-    // Check if megapixels exceed maximum
     const megapixels = (newWidth * newHeight) / 1000000;
     if (megapixels > MAX_MEGAPIXELS) {
       const scale = Math.sqrt(MAX_MEGAPIXELS / megapixels);
@@ -82,31 +112,24 @@ document.addEventListener("DOMContentLoaded", function () {
     return { width: newWidth, height: newHeight };
   }
 
-  // Function to compress and format image
+  // Function to process image
   function processImage(sourceCanvas) {
     return new Promise((resolve) => {
       const img = new Image();
       img.onload = () => {
-        // Calculate optimal dimensions
         const dimensions = calculateOptimalDimensions(img.width, img.height);
-
-        // Create a new canvas with optimal dimensions
         const processedCanvas = document.createElement("canvas");
         processedCanvas.width = dimensions.width;
         processedCanvas.height = dimensions.height;
-
-        // Draw and compress image
         const ctx = processedCanvas.getContext("2d");
         ctx.drawImage(img, 0, 0, dimensions.width, dimensions.height);
-
-        // Convert to Blob with specific settings
         processedCanvas.toBlob(
           (blob) => {
             resolve(blob);
           },
           "image/jpeg",
           0.92
-        ); // Using JPEG format with 92% quality
+        );
       };
       img.src = sourceCanvas.toDataURL("image/jpeg", 1.0);
     });
@@ -123,8 +146,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: { ideal: "environment" },
-          width: { ideal: 1092 }, // Match Anthropic's recommended max width
-          height: { ideal: 1092 }, // Match Anthropic's recommended max height
+          width: { ideal: 1092 },
+          height: { ideal: 1092 },
         },
       });
       cameraStream.srcObject = stream;
@@ -135,22 +158,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   snapButton.addEventListener("click", async function () {
-    // Set canvas dimensions to match video feed
     canvas.width = cameraStream.videoWidth;
     canvas.height = cameraStream.videoHeight;
-
-    // Capture the image
     const ctx = canvas.getContext("2d");
     ctx.drawImage(cameraStream, 0, 0);
-
-    // Process the captured image
     const processedBlob = await processImage(canvas);
     const imageUrl = URL.createObjectURL(processedBlob);
-
-    // Display processed image in preview
     preview.innerHTML = `<img src="${imageUrl}" alt="Captured palm">`;
 
-    // Stop camera stream
     if (cameraStream.srcObject) {
       cameraStream.srcObject.getTracks().forEach((track) => track.stop());
     }
@@ -160,22 +175,17 @@ document.addEventListener("DOMContentLoaded", function () {
     uploadButton.style.display = "block";
   });
 
-  // Update file input handler to use same processing
   imageInput.addEventListener("change", async function () {
     if (imageInput.files.length > 0) {
       const file = imageInput.files[0];
-
-      // Create temporary canvas to process uploaded file
       const img = new Image();
       img.onload = async () => {
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = img.width;
         tempCanvas.height = img.height;
         tempCanvas.getContext("2d").drawImage(img, 0, 0);
-
         const processedBlob = await processImage(tempCanvas);
         const imageUrl = URL.createObjectURL(processedBlob);
-
         preview.innerHTML = `<img src="${imageUrl}" alt="Selected palm">`;
         uploadButton.style.display = "block";
       };
@@ -187,21 +197,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const formData = new FormData();
     let imageBlob;
 
-    // Get the current preview image
     const previewImg = preview.querySelector("img");
     if (!previewImg) {
       alert("Please select or capture an image first.");
       return;
     }
 
-    // Convert the preview image URL to a blob
     try {
       const response = await fetch(previewImg.src);
       imageBlob = await response.blob();
 
-      // Verify blob size
       if (imageBlob.size > 5 * 1024 * 1024) {
-        // 5MB limit
         throw new Error(
           "Image size exceeds 5MB limit. Please try again with a smaller image."
         );
@@ -212,11 +218,6 @@ document.addEventListener("DOMContentLoaded", function () {
       alert(error.message);
       return;
     }
-
-    const modal = document.getElementById("modal");
-    const modalText = document.getElementById("modal-text");
-    const modalLoading = document.getElementById("modal-loading");
-    const closeSpan = document.getElementsByClassName("close")[0];
 
     modal.style.display = "block";
     modalLoading.style.display = "block";
