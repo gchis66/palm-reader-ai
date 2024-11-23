@@ -55,31 +55,17 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.style.display = "none";
   document.body.appendChild(canvas);
 
-  // Add modal close handlers
+  // Modal close handler - only through X button
   closeSpan.addEventListener("click", function () {
     modal.style.display = "none";
     modalText.textContent = "";
     document.getElementById("payment-info-container").style.display = "none";
+    document.body.style.overflow = "auto"; // Restore body scroll
     // Reset camera elements
     cameraStream.style.display = "none";
     snapButton.style.display = "none";
     if (cameraStream.srcObject) {
       cameraStream.srcObject.getTracks().forEach((track) => track.stop());
-    }
-  });
-
-  // Click outside modal to close
-  window.addEventListener("click", function (event) {
-    if (event.target == modal) {
-      modal.style.display = "none";
-      modalText.textContent = "";
-      document.getElementById("payment-info-container").style.display = "none";
-      // Reset camera elements
-      cameraStream.style.display = "none";
-      snapButton.style.display = "none";
-      if (cameraStream.srcObject) {
-        cameraStream.srcObject.getTracks().forEach((track) => track.stop());
-      }
     }
   });
 
@@ -223,6 +209,7 @@ document.addEventListener("DOMContentLoaded", function () {
     modalLoading.style.display = "block";
     modalText.textContent = "Please wait while your palm is being read...";
     closeSpan.style.pointerEvents = "none";
+    document.body.style.overflow = "hidden"; // Prevent body scroll when modal is open
 
     try {
       const response = await fetch(

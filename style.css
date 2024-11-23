@@ -116,24 +116,23 @@ button:hover {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
   background-color: rgba(43, 43, 82, 0.9);
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .modal-content {
   background-color: #fff5ee;
   color: #4a3f35;
-  margin: auto;
+  margin: 20px auto;
   padding: 20px;
   border: 1px solid #888;
   width: 90%;
   max-width: 800px;
-  overflow-y: auto;
-  height: auto;
+  height: calc(100vh - 40px);
   position: relative;
-  word-wrap: break-word;
   box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #modal-text {
@@ -382,26 +381,6 @@ button:hover {
 
 @media only screen and (max-width: 960px) and (orientation: landscape),
   only screen and (max-width: 600px) {
-  .modal-content {
-    width: 95%;
-    margin: 10px auto;
-    padding: 15px;
-  }
-
-  .close {
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-  }
-
-  #modal-text {
-    padding: 5px;
-  }
-
-  #payment-info-container {
-    padding: 10px;
-  }
-
   .container {
     padding: 0;
   }
@@ -413,26 +392,6 @@ button:hover {
 
   #trust-signals {
     display: block;
-  }
-}
-
-/* Additional mobile-specific styles */
-@media (max-width: 480px) {
-  .modal-content {
-    width: 100%;
-    margin: 0;
-    border-radius: 0;
-    min-height: 100vh;
-  }
-
-  #modal-text {
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .close {
-    top: 5px;
-    right: 5px;
   }
 
   .swiper-container {
@@ -452,5 +411,40 @@ button:hover {
   .swiper-button-next:after,
   .swiper-button-prev:after {
     font-size: 14px;
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 480px) {
+  .modal-content {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 15px;
+    border-radius: 0;
+  }
+
+  #modal-text {
+    font-size: 14px;
+    line-height: 1.4;
+    padding: 5px;
+  }
+
+  .close {
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+  }
+
+  #payment-info-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+  }
+
+  /* Ensure Stripe elements stay within container */
+  .StripeElement {
+    width: 100%;
+    box-sizing: border-box;
   }
 }
