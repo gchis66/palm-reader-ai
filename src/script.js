@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const cardElement = elements.create("card", { style: style });
   cardElement.mount("#card-element");
 
-  // Camera functionality
   const cameraStream = document.getElementById("cameraStream");
   const canvas = document.createElement("canvas");
   const openCameraButton = document.getElementById("openCameraButton");
@@ -52,39 +51,106 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.style.display = "none";
   document.body.appendChild(canvas);
 
-  openCameraButton.addEventListener("click", function () {
+  // Function to calculate optimal dimensions while maintaining aspect ratio
+  function calculateOptimalDimensions(width, height) {
+    const MAX_WIDTH = 1092; // Maximum width for 1:1 aspect ratio per Anthropic docs
+    const MAX_HEIGHT = 1092; // Maximum height for 1:1 aspect ratio per Anthropic docs
+    const MAX_MEGAPIXELS = 1.15; // Maximum recommended megapixels
+
+    let newWidth = width;
+    let newHeight = height;
+
+    // Check if dimensions exceed maximum allowed
+    if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+      if (width > height) {
+        newWidth = MAX_WIDTH;
+        newHeight = Math.floor((height * MAX_WIDTH) / width);
+      } else {
+        newHeight = MAX_HEIGHT;
+        newWidth = Math.floor((width * MAX_HEIGHT) / height);
+      }
+    }
+
+    // Check if megapixels exceed maximum
+    const megapixels = (newWidth * newHeight) / 1000000;
+    if (megapixels > MAX_MEGAPIXELS) {
+      const scale = Math.sqrt(MAX_MEGAPIXELS / megapixels);
+      newWidth = Math.floor(newWidth * scale);
+      newHeight = Math.floor(newHeight * scale);
+    }
+
+    return { width: newWidth, height: newHeight };
+  }
+
+  // Function to compress and format image
+  function processImage(sourceCanvas) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        // Calculate optimal dimensions
+        const dimensions = calculateOptimalDimensions(img.width, img.height);
+
+        // Create a new canvas with optimal dimensions
+        const processedCanvas = document.createElement("canvas");
+        processedCanvas.width = dimensions.width;
+        processedCanvas.height = dimensions.height;
+
+        // Draw and compress image
+        const ctx = processedCanvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, dimensions.width, dimensions.height);
+
+        // Convert to Blob with specific settings
+        processedCanvas.toBlob(
+          (blob) => {
+            resolve(blob);
+          },
+          "image/jpeg",
+          0.92
+        ); // Using JPEG format with 92% quality
+      };
+      img.src = sourceCanvas.toDataURL("image/jpeg", 1.0);
+    });
+  }
+
+  openCameraButton.addEventListener("click", async function () {
     preview.innerHTML = "";
     uploadButton.style.display = "none";
     cameraStream.style.display = "block";
     snapButton.style.display = "inline-block";
     imageInput.value = "";
 
-    if (navigator.mediaDevices.getUserMedia) {
-      navigator.mediaDevices
-        .getUserMedia({
-          video: {
-            facingMode: { ideal: "environment" },
-            width: { ideal: 1280 },
-            height: { ideal: 720 },
-          },
-        })
-        .then(function (stream) {
-          cameraStream.srcObject = stream;
-          cameraStream.play();
-        })
-        .catch(function (error) {
-          console.error("Camera error:", error);
-        });
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: 1092 }, // Match Anthropic's recommended max width
+          height: { ideal: 1092 }, // Match Anthropic's recommended max height
+        },
+      });
+      cameraStream.srcObject = stream;
+      await cameraStream.play();
+    } catch (error) {
+      console.error("Camera error:", error);
     }
   });
 
-  snapButton.addEventListener("click", function () {
+  snapButton.addEventListener("click", async function () {
+    // Set canvas dimensions to match video feed
     canvas.width = cameraStream.videoWidth;
     canvas.height = cameraStream.videoHeight;
-    canvas.getContext("2d").drawImage(cameraStream, 0, 0);
-    const imageDataURL = canvas.toDataURL("image/jpeg");
-    preview.innerHTML = `<img src="${imageDataURL}" alt="Captured palm">`;
 
+    // Capture the image
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(cameraStream, 0, 0);
+
+    // Process the captured image
+    const processedBlob = await processImage(canvas);
+    const imageUrl = URL.createObjectURL(processedBlob);
+
+    // Display processed image in preview
+    preview.innerHTML = `<img src="${imageUrl}" alt="Captured palm">`;
+
+    // Stop camera stream
     if (cameraStream.srcObject) {
       cameraStream.srcObject.getTracks().forEach((track) => track.stop());
     }
@@ -94,36 +160,56 @@ document.addEventListener("DOMContentLoaded", function () {
     uploadButton.style.display = "block";
   });
 
-  imageInput.addEventListener("change", function () {
-    const imageInput = document.getElementById("imageInput");
-    const uploadButton = document.getElementById("uploadButton");
-    const cameraStream = document.getElementById("cameraStream");
-    const snapButton = document.getElementById("snapButton");
-
-    cameraStream.style.display = "none";
-    snapButton.style.display = "none";
-
+  // Update file input handler to use same processing
+  imageInput.addEventListener("change", async function () {
     if (imageInput.files.length > 0) {
-      const preview = document.getElementById("preview");
-      preview.innerHTML =
-        '<img src="' + URL.createObjectURL(imageInput.files[0]) + '">';
-      uploadButton.style.display = "block";
+      const file = imageInput.files[0];
+
+      // Create temporary canvas to process uploaded file
+      const img = new Image();
+      img.onload = async () => {
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+        tempCanvas.getContext("2d").drawImage(img, 0, 0);
+
+        const processedBlob = await processImage(tempCanvas);
+        const imageUrl = URL.createObjectURL(processedBlob);
+
+        preview.innerHTML = `<img src="${imageUrl}" alt="Selected palm">`;
+        uploadButton.style.display = "block";
+      };
+      img.src = URL.createObjectURL(file);
     }
   });
 
-  uploadButton.addEventListener("click", function () {
+  uploadButton.addEventListener("click", async function () {
     const formData = new FormData();
-    let imageData;
+    let imageBlob;
 
-    if (imageInput.files.length > 0) {
-      imageData = imageInput.files[0];
-      formData.append("palmImage", imageData);
-      canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-    } else if (canvas.toDataURL() !== "data:,") {
-      imageData = dataURItoBlob(canvas.toDataURL());
-      formData.append("palmImage", imageData, "palmImage.png");
-    } else {
-      alert("Please select an image to upload.");
+    // Get the current preview image
+    const previewImg = preview.querySelector("img");
+    if (!previewImg) {
+      alert("Please select or capture an image first.");
+      return;
+    }
+
+    // Convert the preview image URL to a blob
+    try {
+      const response = await fetch(previewImg.src);
+      imageBlob = await response.blob();
+
+      // Verify blob size
+      if (imageBlob.size > 5 * 1024 * 1024) {
+        // 5MB limit
+        throw new Error(
+          "Image size exceeds 5MB limit. Please try again with a smaller image."
+        );
+      }
+
+      formData.append("palmImage", imageBlob, "palm.jpg");
+    } catch (error) {
+      alert(error.message);
       return;
     }
 
@@ -135,66 +221,45 @@ document.addEventListener("DOMContentLoaded", function () {
     modal.style.display = "block";
     modalLoading.style.display = "block";
     modalText.textContent = "Please wait while your palm is being read...";
+    closeSpan.style.pointerEvents = "none";
 
-    fetch("https://palm-reader-app.onrender.com/api/upload", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          if (response.status === 413) {
-            throw new Error(
-              "The image is too large. Please upload an image smaller than 20MB."
-            );
-          }
-          if (response.status === 429) {
-            throw new Error("Too many requests. Please try again later.");
-          }
-          throw new Error("An error occurred while processing your request.");
+    try {
+      const response = await fetch(
+        "https://palm-reader-app.onrender.com/api/upload",
+        {
+          method: "POST",
+          body: formData,
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data.message);
-        const [previewContent, fullContent] = splitContent(data.message);
-        modalText.innerHTML = previewContent;
-        document.getElementById("payment-info-container").style.display =
-          "block";
-        const paymentButton = document.createElement("button");
-        paymentButton.classList.add("paymentbtn");
-        paymentButton.textContent = "Unlock Full Reading for $4.99";
-        paymentButton.onclick = () =>
-          openStripeCheckout(previewContent + fullContent);
-        modalText.appendChild(paymentButton);
-        modalLoading.style.display = "none";
-        closeSpan.style.pointerEvents = "auto";
-        document.body.style.overflowY = "hidden";
-      })
-      .catch((error) => {
-        modalText.textContent = error.message;
-        modalLoading.style.display = "none";
-        closeSpan.style.pointerEvents = "auto";
-      });
-  });
+      );
 
-  const closeSpan = document.getElementsByClassName("close")[0];
-  closeSpan.onclick = function () {
-    document.getElementById("modal").style.display = "none";
-    document.body.style.overflowY = "auto";
-  };
+      if (!response.ok) {
+        throw new Error(
+          response.status === 413
+            ? "The image is too large. Please try again with a smaller image."
+            : response.status === 429
+            ? "Too many requests. Please try again later."
+            : "An error occurred while processing your request."
+        );
+      }
 
-  function dataURItoBlob(dataURI) {
-    const byteString = atob(dataURI.split(",")[1]);
-    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-    const arrayBuffer = new ArrayBuffer(byteString.length);
-    const intArray = new Uint8Array(arrayBuffer);
+      const data = await response.json();
+      const [previewContent, fullContent] = splitContent(data.message);
+      modalText.innerHTML = previewContent;
+      document.getElementById("payment-info-container").style.display = "block";
 
-    for (let i = 0; i < byteString.length; i++) {
-      intArray[i] = byteString.charCodeAt(i);
+      const paymentButton = document.createElement("button");
+      paymentButton.classList.add("paymentbtn");
+      paymentButton.textContent = "Unlock Full Reading for $4.99";
+      paymentButton.onclick = () =>
+        openStripeCheckout(previewContent + fullContent);
+      modalText.appendChild(paymentButton);
+    } catch (error) {
+      modalText.textContent = error.message;
+    } finally {
+      modalLoading.style.display = "none";
+      closeSpan.style.pointerEvents = "auto";
     }
-
-    return new Blob([arrayBuffer], { type: mimeString });
-  }
+  });
 
   function splitContent(fullText) {
     const splitIndex = fullText.indexOf("<!-- PAYWALL -->");
