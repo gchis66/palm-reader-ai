@@ -10,9 +10,5 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/$1" }
-  ],
-  "env": {
-    "ANTHROPIC_API_KEY": "ANTHROPIC_API_KEY",
-    "STRIPE_API_KEY": "STRIPE_API_KEY"
-  }
+  ]
 }
