@@ -239,29 +239,42 @@ document.addEventListener("DOMContentLoaded", function () {
     closeSpan.style.pointerEvents = "none";
 
     try {
-      let response;
       let useBase64Method = false;
+      let requestId;
 
       try {
         // Try the standard multipart form upload first
-        response = await fetch("/api/upload", {
+        const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
         });
+
+        if (!response.ok) {
+          throw new Error("Upload failed with status: " + response.status);
+        }
+
+        const data = await response.json();
+        requestId = data.requestId;
       } catch (error) {
-        // If that fails, switch to base64 method
         console.log("Standard upload failed, trying base64 method");
         useBase64Method = true;
       }
 
-      if (useBase64Method || !response || !response.ok) {
-        // Use the base64 upload method as fallback
-        await uploadImageAsBase64();
-        return; // uploadImageAsBase64 handles all the UI updates
+      if (useBase64Method) {
+        requestId = await uploadImageAsBase64();
+        if (!requestId) {
+          throw new Error("Failed to get request ID from base64 upload");
+        }
       }
 
-      const data = await response.json();
-      const [previewContent, fullContent] = splitContent(data.message);
+      // Poll for results
+      const result = await pollForResults(
+        useBase64Method ? "/api/upload-base64" : "/api/upload",
+        requestId
+      );
+
+      // Process the palm reading result
+      const [previewContent, fullContent] = splitContent(result);
       modalText.innerHTML = previewContent;
       document.getElementById("payment-info-container").style.display = "block";
 
@@ -272,7 +285,8 @@ document.addEventListener("DOMContentLoaded", function () {
         openStripeCheckout(previewContent + fullContent);
       modalText.appendChild(paymentButton);
     } catch (error) {
-      modalText.textContent = error.message;
+      modalText.textContent =
+        error.message || "An error occurred while processing your request.";
     } finally {
       modalLoading.style.display = "none";
       closeSpan.style.pointerEvents = "auto";
@@ -300,16 +314,8 @@ document.addEventListener("DOMContentLoaded", function () {
   async function uploadImageAsBase64() {
     const previewImg = preview.querySelector("img");
     if (!previewImg) {
-      alert("Please select or capture an image first.");
-      return;
+      throw new Error("Please select or capture an image first.");
     }
-
-    modal.style.display = "block";
-    lockBodyScroll();
-    adjustModalContent();
-    modalLoading.style.display = "block";
-    modalText.textContent = "Please wait while your palm is being read...";
-    closeSpan.style.pointerEvents = "none";
 
     try {
       // Fetch the image as a blob
@@ -349,22 +355,56 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       const data = await apiResponse.json();
-      const [previewContent, fullContent] = splitContent(data.message);
-      modalText.innerHTML = previewContent;
-      document.getElementById("payment-info-container").style.display = "block";
-
-      const paymentButton = document.createElement("button");
-      paymentButton.classList.add("paymentbtn");
-      paymentButton.textContent = "Unlock Full Reading for $4.99";
-      paymentButton.onclick = () =>
-        openStripeCheckout(previewContent + fullContent);
-      modalText.appendChild(paymentButton);
+      return data.requestId;
     } catch (error) {
-      modalText.textContent = error.message;
-    } finally {
-      modalLoading.style.display = "none";
-      closeSpan.style.pointerEvents = "auto";
+      throw error;
     }
+  }
+
+  // Function to poll for results
+  async function pollForResults(
+    endpoint,
+    requestId,
+    maxAttempts = 30,
+    interval = 3000
+  ) {
+    let attempts = 0;
+
+    while (attempts < maxAttempts) {
+      try {
+        const response = await fetch(`${endpoint}?requestId=${requestId}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error checking status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.status === "completed") {
+          return data.message;
+        } else if (data.status === "error") {
+          throw new Error(data.error || "Processing failed");
+        }
+
+        // Update loading message with progress percentage
+        const progressPercent = Math.min(
+          Math.round((attempts / maxAttempts) * 100),
+          90
+        );
+        modalText.textContent = `Please wait while your palm is being read... ${progressPercent}%`;
+
+        // Wait before next attempt
+        await new Promise((resolve) => setTimeout(resolve, interval));
+        attempts++;
+      } catch (error) {
+        console.error("Error polling for results:", error);
+        throw error;
+      }
+    }
+
+    throw new Error("Processing timed out. Please try again later.");
   }
 
   function openStripeCheckout(completeContent) {
