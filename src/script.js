@@ -239,22 +239,25 @@ document.addEventListener("DOMContentLoaded", function () {
     closeSpan.style.pointerEvents = "none";
 
     try {
-      const response = await fetch(
-        "https://palm-reader-app.onrender.com/api/upload",
-        {
+      let response;
+      let useBase64Method = false;
+
+      try {
+        // Try the standard multipart form upload first
+        response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
-        }
-      );
+        });
+      } catch (error) {
+        // If that fails, switch to base64 method
+        console.log("Standard upload failed, trying base64 method");
+        useBase64Method = true;
+      }
 
-      if (!response.ok) {
-        throw new Error(
-          response.status === 413
-            ? "The image is too large. Please try again with a smaller image."
-            : response.status === 429
-            ? "Too many requests. Please try again later."
-            : "An error occurred while processing your request."
-        );
+      if (useBase64Method || !response || !response.ok) {
+        // Use the base64 upload method as fallback
+        await uploadImageAsBase64();
+        return; // uploadImageAsBase64 handles all the UI updates
       }
 
       const data = await response.json();
@@ -294,8 +297,78 @@ document.addEventListener("DOMContentLoaded", function () {
     return [previewContent, fullContent];
   }
 
+  async function uploadImageAsBase64() {
+    const previewImg = preview.querySelector("img");
+    if (!previewImg) {
+      alert("Please select or capture an image first.");
+      return;
+    }
+
+    modal.style.display = "block";
+    lockBodyScroll();
+    adjustModalContent();
+    modalLoading.style.display = "block";
+    modalText.textContent = "Please wait while your palm is being read...";
+    closeSpan.style.pointerEvents = "none";
+
+    try {
+      // Fetch the image as a blob
+      const response = await fetch(previewImg.src);
+      const imageBlob = await response.blob();
+
+      if (imageBlob.size > 5 * 1024 * 1024) {
+        throw new Error(
+          "Image size exceeds 5MB limit. Please try again with a smaller image."
+        );
+      }
+
+      // Convert blob to base64
+      const base64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result.split(",")[1]);
+        reader.readAsDataURL(imageBlob);
+      });
+
+      // Send base64 data to the API
+      const apiResponse = await fetch("/api/upload-base64", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ imageBase64: base64 }),
+      });
+
+      if (!apiResponse.ok) {
+        throw new Error(
+          apiResponse.status === 413
+            ? "The image is too large. Please try again with a smaller image."
+            : apiResponse.status === 429
+            ? "Too many requests. Please try again later."
+            : "An error occurred while processing your request."
+        );
+      }
+
+      const data = await apiResponse.json();
+      const [previewContent, fullContent] = splitContent(data.message);
+      modalText.innerHTML = previewContent;
+      document.getElementById("payment-info-container").style.display = "block";
+
+      const paymentButton = document.createElement("button");
+      paymentButton.classList.add("paymentbtn");
+      paymentButton.textContent = "Unlock Full Reading for $4.99";
+      paymentButton.onclick = () =>
+        openStripeCheckout(previewContent + fullContent);
+      modalText.appendChild(paymentButton);
+    } catch (error) {
+      modalText.textContent = error.message;
+    } finally {
+      modalLoading.style.display = "none";
+      closeSpan.style.pointerEvents = "auto";
+    }
+  }
+
   function openStripeCheckout(completeContent) {
-    fetch("https://palm-reader-app.onrender.com/create-payment-intent", {
+    fetch("/api/create-payment-intent", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
