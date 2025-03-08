@@ -1,4 +1,4 @@
-import { askAboutImages } from "../utils/anthropic.js";
+import { askAboutImages } from "../../utils/anthropic.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {

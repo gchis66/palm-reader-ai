@@ -1,4 +1,4 @@
-import { createPaymentIntent } from "../utils/stripe.js";
+import { createPaymentIntent } from "../../utils/stripe.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
