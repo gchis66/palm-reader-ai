@@ -332,14 +332,18 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
       modalText.appendChild(valuePropositionCard);
 
-      document.getElementById("payment-info-container").style.display = "block";
+      // Show payment info container and add button inside it (after Stripe card element)
+      const paymentInfoContainer = document.getElementById("payment-info-container");
+      paymentInfoContainer.style.display = "block";
 
       const paymentButton = document.createElement("button");
       paymentButton.classList.add("paymentbtn");
       paymentButton.textContent = "Unlock My Full Reading →";
       paymentButton.onclick = () =>
         openStripeCheckout(previewContent + fullContent);
-      modalText.appendChild(paymentButton);
+
+      // Add button to payment container (after card element and trust signals)
+      paymentInfoContainer.appendChild(paymentButton);
     } catch (error) {
       modalText.textContent =
         error.message || "An error occurred while processing your request.";

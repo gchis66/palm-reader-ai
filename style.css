@@ -495,6 +495,14 @@ button:hover {
   border: 1px solid rgba(212, 175, 55, 0.2);
 }
 
+#payment-info-container .paymentbtn {
+  width: 100%;
+  max-width: 400px;
+  display: block;
+  margin: 25px auto 10px auto;
+  font-size: 1.15em;
+}
+
 #card-element {
   background: white;
   padding: 18px;
