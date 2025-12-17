@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // Initialize particle effect
+  initParticles();
+
   new Swiper(".swiper-container", {
     loop: true,
     navigation: {
@@ -276,11 +279,64 @@ document.addEventListener("DOMContentLoaded", function () {
       // Process the palm reading result
       const [previewContent, fullContent] = splitContent(result);
       modalText.innerHTML = previewContent;
+
+      // Add value proposition card
+      const valuePropositionCard = document.createElement("div");
+      valuePropositionCard.className = "value-proposition-card";
+      valuePropositionCard.innerHTML = `
+        <div class="blur-overlay">
+          <div class="locked-content-preview">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lock-icon">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+        </div>
+        <h2 class="value-prop-title">Unlock Your Complete Destiny Map</h2>
+        <ul class="value-prop-list">
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Full palm analysis (Heart, Head, Life, Fate lines)</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Personality insights and hidden talents</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Love and relationship guidance</span>
+          </li>
+          <li>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Career and financial outlook</span>
+          </li>
+        </ul>
+        <div class="value-prop-price">
+          <span class="price-label">One-time payment:</span>
+          <span class="price-amount">$4.99</span>
+        </div>
+        <div class="value-prop-guarantee">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>No subscription • Money-back guarantee • Instant access</span>
+        </div>
+      `;
+      modalText.appendChild(valuePropositionCard);
+
       document.getElementById("payment-info-container").style.display = "block";
 
       const paymentButton = document.createElement("button");
       paymentButton.classList.add("paymentbtn");
-      paymentButton.textContent = "Unlock Full Reading for $4.99";
+      paymentButton.textContent = "Unlock My Full Reading →";
       paymentButton.onclick = () =>
         openStripeCheckout(previewContent + fullContent);
       modalText.appendChild(paymentButton);
@@ -388,12 +444,33 @@ document.addEventListener("DOMContentLoaded", function () {
           throw new Error(data.error || "Processing failed");
         }
 
-        // Update loading message with progress percentage
+        // Update loading message with progress stages
         const progressPercent = Math.min(
           Math.round((attempts / maxAttempts) * 100),
           90
         );
-        modalText.textContent = `Please wait while your palm is being read... ${progressPercent}%`;
+
+        let progressMessage = "Please wait while your palm is being read...";
+        if (progressPercent < 25) {
+          progressMessage = "Analyzing your life line...";
+        } else if (progressPercent < 50) {
+          progressMessage = "Reading your heart line...";
+        } else if (progressPercent < 75) {
+          progressMessage = "Interpreting your head line...";
+        } else {
+          progressMessage = "Revealing your fate line...";
+        }
+
+        modalText.innerHTML = `
+          <div class="loading-stage">
+            <div class="loading-message">${progressMessage}</div>
+            <div class="loading-progress-bar">
+              <div class="loading-progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+            <div class="loading-percent">${progressPercent}%</div>
+            <div class="loading-subtext">This usually takes 20-30 seconds</div>
+          </div>
+        `;
 
         // Wait before next attempt
         await new Promise((resolve) => setTimeout(resolve, interval));
@@ -436,5 +513,124 @@ document.addEventListener("DOMContentLoaded", function () {
       .catch((error) => {
         console.error("Payment failed:", error);
       });
+  }
+
+  // Particle background effect
+  function initParticles() {
+    const canvas = document.getElementById("particle-canvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    let animationFrameId;
+
+    // Set canvas size
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    // Particle class
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1.5; // Increased from 2 + 0.5
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.6 + 0.5; // Increased from 0.5 + 0.3
+        this.twinkle = Math.random() * 0.02 + 0.01; // Add twinkling effect
+        this.twinkleDirection = Math.random() > 0.5 ? 1 : -1;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        // Twinkling effect
+        this.opacity += this.twinkle * this.twinkleDirection;
+        if (this.opacity >= 1.0 || this.opacity <= 0.5) {
+          this.twinkleDirection *= -1;
+        }
+
+        // Wrap around screen
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        if (this.y < 0) this.y = canvas.height;
+      }
+
+      draw() {
+        // Draw glow effect
+        const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2);
+        gradient.addColorStop(0, `rgba(212, 175, 55, ${this.opacity})`);
+        gradient.addColorStop(0.5, `rgba(212, 175, 55, ${this.opacity * 0.5})`);
+        gradient.addColorStop(1, `rgba(212, 175, 55, 0)`);
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw core
+        ctx.fillStyle = `rgba(255, 215, 100, ${this.opacity})`; // Brighter golden core
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Create particles
+    function createParticles() {
+      const particleCount = Math.floor((canvas.width * canvas.height) / 10000); // Increased from 15000
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    // Animation loop with performance optimization
+    let lastTime = 0;
+    const targetFPS = 60;
+    const frameDelay = 1000 / targetFPS;
+
+    function animate(currentTime) {
+      animationFrameId = requestAnimationFrame(animate);
+
+      // Throttle to target FPS
+      const deltaTime = currentTime - lastTime;
+      if (deltaTime < frameDelay) return;
+      lastTime = currentTime - (deltaTime % frameDelay);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((particle) => {
+        particle.update();
+        particle.draw();
+      });
+    }
+
+    // Initialize
+    createParticles();
+    animate(0);
+
+    // Pause animation when page is hidden for performance
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      } else {
+        animate(0);
+      }
+    });
+
+    // Cleanup on page unload
+    window.addEventListener("beforeunload", () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    });
   }
 });
