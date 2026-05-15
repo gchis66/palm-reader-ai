@@ -34,7 +34,7 @@ This project does not currently have automated tests configured. When implementi
 - **Payment Processing**: `utils/stripe.js` - Manages Stripe payment intent creation
 
 ### Key Integrations
-- **Anthropic Claude**: Uses `claude-sonnet-4-20250514` model for palm reading analysis
+- **Anthropic Claude**: Uses `claude-sonnet-4-6` model for palm reading analysis
 - **Stripe**: Processes $4.99 payments for premium palm readings  
 - **Vercel**: Serverless deployment with static file hosting
 
